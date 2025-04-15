@@ -1,0 +1,36 @@
+{
+  "info": {
+    "description": "漫画吹き出しアノテーションデータ",
+    "version": "1.0",
+    "date_created": "2025-04-15"
+  },
+  "images": [
+    {
+      "id": 1,
+      "file_name": "000.jpg",
+      "width": 800,
+      "height": 1200
+    }
+  ],
+  "annotations": [
+    {
+      "id": 1,
+      "image_id": 1,
+      "category_id": 1,
+      "segmentation": [
+        [150, 150, 150, 300, 250, 300, 300, 250, 300, 150]
+      ],
+      "area": 25000,
+      "bbox": [150, 150, 150, 150],
+      "iscrowd": 0,
+      "text": "こんにちは！"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "speech_balloon",
+      "supercategory": "comic"
+    }
+  ]
+}

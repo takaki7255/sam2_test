@@ -1,0 +1,36 @@
+# SAM2漫画画像セグメンテーション用ファインチューニング設定
+model:
+  type: "sam2"
+  backbone: "hiera_base_plus"  # tiny, small, base_plus, large から選択
+  checkpoint: "../checkpoints/sam2.1_hiera_base_plus.pt"  # 事前学習済みモデルのパス
+
+training:
+  batch_size: 8
+  num_epochs: 30
+  learning_rate: 0.00005
+  weight_decay: 0.01
+  warmup_steps: 100
+  gradient_accumulation_steps: 1
+  mixed_precision: true
+  save_interval: 5  # エポック間隔でモデルを保存
+
+data:
+  dataset_dir: "../manga_data"
+  image_size: 1024  # 入力画像サイズ
+  augmentation:
+    random_flip: true
+    random_rotation: true
+    color_jitter: true
+    random_resize: [0.8, 1.2]
+  
+loss:
+  dice_weight: 1.0
+  focal_weight: 20.0
+  point_weight: 1.0
+
+optimizer:
+  type: "adamw"
+  
+scheduler:
+  type: "cosine"
+  num_warmup_steps: 100
