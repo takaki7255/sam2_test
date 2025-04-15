@@ -11,4 +11,4 @@ checkpoints/*.pt
 demo/backend/checkpoints/*.pt
 test_img/*
 test_result/*
-maga_data/*
+manga_data/*
