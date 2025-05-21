@@ -19,9 +19,9 @@ from sam2.sam2_image_predictor import SAM2ImagePredictor
 # 処理する画像のパス
 IMAGE_PATH = "./test_img/004.jpg"
 # 使用するモデルサイズ（"tiny", "small", "base_plus", "large"）
-MODEL_SIZE = "base_plus"
+MODEL_SIZE = "small"
 # 使用するデバイス（"cpu"のみ指定可能に変更）
-DEVICE = "cpu"  # Macでのエラー回避のためCPUを使用
+DEVICE = "mps"  # MPSデバイスを使用
 # 結果画像の保存先パス（Noneの場合は表示のみ）
 OUTPUT_PATH = "./test_result/"
 
@@ -140,6 +140,9 @@ def visualize_results(image_path, masks, output_path=None):
             plt.show()
 
 def main():
+    # MPSデバイスでのbicubic補間をサポートするための環境変数設定
+    os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
+    
     # 指定された画像が存在するか確認
     if not os.path.exists(IMAGE_PATH):
         print(f"エラー: 指定された画像 '{IMAGE_PATH}' が見つかりません。")

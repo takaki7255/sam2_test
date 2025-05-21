@@ -216,13 +216,19 @@ class MaskDecoder(nn.Module):
 
         # Upscale mask embeddings and predict masks using the mask tokens
         src = src.transpose(1, 2).view(b, c, h, w)
-        if not self.use_high_res_features:
+        if not self.use_high_res_features or high_res_features is None:
             upscaled_embedding = self.output_upscaling(src)
         else:
+            # 高解像度特徴が存在する場合のみアンパックを試みる
             dc1, ln1, act1, dc2, act2 = self.output_upscaling
-            feat_s0, feat_s1 = high_res_features
-            upscaled_embedding = act1(ln1(dc1(src) + feat_s1))
-            upscaled_embedding = act2(dc2(upscaled_embedding) + feat_s0)
+            try:
+                feat_s0, feat_s1 = high_res_features
+                upscaled_embedding = act1(ln1(dc1(src) + feat_s1))
+                upscaled_embedding = act2(dc2(upscaled_embedding) + feat_s0)
+            except (TypeError, ValueError) as e:
+                print(f"警告: 高解像度特徴のアンパックに失敗しました: {e}。標準のupscalingを使用します。")
+                # フォールバック: high_res_featuresが適切な形式でない場合、標準のupscalingを使用
+                upscaled_embedding = self.output_upscaling(src)
 
         hyper_in_list: List[torch.Tensor] = []
         for i in range(self.num_mask_tokens):
